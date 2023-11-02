@@ -1,19 +1,21 @@
-from selenium import webdriver
 import unittest
+
+from selenium import webdriver
 
 
 class NewVisitorTest(unittest.TestCase):
-    '''Тест нового посетителя'''
+    """Тест нового посетителя"""
+
     def setUp(self):
-        '''установка'''
+        """установка"""
         self.browser = webdriver.Chrome()
 
     def tearDown(self):
-        '''демонтаж'''
+        """демонтаж"""
         pass
 
     def test_can_start_a_list_and_retrieve_it_later(self):
-        '''тест: можно начать список и получить его позже'''
+        """тест: можно начать список и получить его позже"""
         # Эдит слышала про крутое новое онлайн приложение со списком
         # неотложных дел. Она решает оценить его домашнюю страницу
         self.browser.get("http://localhost:8000")
@@ -44,6 +46,7 @@ class NewVisitorTest(unittest.TestCase):
         # Она посещает этот URL-адрес - ее список по-прежнему там.
 
         # Удовлетворенная, она снова ложится спать
+
 
 if __name__ == "__main__":
     unittest.main()
