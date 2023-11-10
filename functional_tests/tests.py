@@ -33,9 +33,9 @@ class NewVisitorTest(LiveServerTestCase):
             try:
                 self.check_for_row_in_list_table(row_text)
                 return
-            except (AssertionError, WebDriverException) as e:
+            except (AssertionError, WebDriverException):
                 if time.time() - start_time > MAX_WAIT:
-                    raise e
+                    raise
                 time.sleep(0.5)
 
     def test_can_start_a_list_and_retrieve_it_later(self):
