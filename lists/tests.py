@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from lists.models import Item
+from lists.models import List
 
 
 class HomePageTest(TestCase):
@@ -8,27 +9,6 @@ class HomePageTest(TestCase):
         """Тест: используется домашний шаблон"""
         response = self.client.get("/")
         self.assertTemplateUsed(response, "home.html")
-
-
-class ItemModelTest(TestCase):
-    """тест модели элемента списка"""
-
-    def test_saving_and_retrieving_items(self):
-        """тест сохранения и получения элементов списка"""
-        first_item = Item()
-        first_item.text = "The first (ever) list item"
-        first_item.save()
-
-        second_item = Item()
-        second_item.text = "Item the second"
-        second_item.save()
-
-        saved_items = Item.objects.all()
-        self.assertEqual(saved_items.count(), 2)
-
-        first_saved_item, second_saved_item = saved_items
-        self.assertEqual(first_item.text, "The first (ever) list item")
-        self.assertEqual(second_item.text, "Item the second")
 
 
 class ListViewTest(TestCase):
@@ -41,8 +21,10 @@ class ListViewTest(TestCase):
 
     def test_display_all_items(self):
         """тест: отображаются все элементы списка"""
-        Item.objects.create(text="itemey 1")
-        Item.objects.create(text="itemey 2")
+        mylist = List()
+        mylist.save()
+        Item.objects.create(text="itemey 1", list=mylist)
+        Item.objects.create(text="itemey 2", list=mylist)
 
         response = self.client.get("/lists/the-only-list-in-the-world")
 
@@ -63,3 +45,31 @@ class NewListTest(TestCase):
         response = self.client.post("/lists/new", data={"item_text": "A new list item"})
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/lists/the-only-list-in-the-world")
+
+
+class ListAndItemModelsTest(TestCase):
+    def test_saving_and_retrieving_items(self):
+        mylist = List()
+        mylist.save()
+        first_item = Item()
+        first_item.text = "The first (ever) list item"
+        first_item.list = mylist
+        first_item.save()
+
+        second_item = Item()
+        second_item.text = "Item the second"
+        second_item.list = mylist
+        second_item.save()
+
+        saved_list = List.objects.get()
+        self.assertEqual(saved_list, mylist)
+
+        saved_items = Item.objects.all()
+        self.assertEqual(saved_items.count(), 2)
+
+        first_saved_item = saved_items[0]
+        second_saved_item = saved_items[1]
+        self.assertEqual(first_saved_item.text, "The first (ever) list item")
+        self.assertEqual(first_saved_item.list, mylist)
+        self.assertEqual(second_saved_item.text, "Item the second")
+        self.assertEqual(second_saved_item.list, mylist)
