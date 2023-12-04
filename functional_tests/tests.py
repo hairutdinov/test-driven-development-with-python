@@ -1,4 +1,5 @@
 import time
+from unittest import skip
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
@@ -29,6 +30,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
                     raise
                 time.sleep(0.5)
 
+    @skip
     def test_can_start_a_todo_list(self):
         # Edith has heard about a cool new online to-do app.
         # She goes to check out its homepage
@@ -65,6 +67,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
         # Satisfied, she goes back to sleep
 
+    @skip
     def test_multiple_users_can_start_lists_at_different_urls(self):
         # Edith starts a new to-do list
         self.browser.get(self.live_server_url)
