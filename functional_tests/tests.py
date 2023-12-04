@@ -1,3 +1,4 @@
+import os
 import time
 from unittest import skip
 
@@ -7,12 +8,16 @@ from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
+from superlists.settings import DJANGO_STAGING_SERVER
+
 MAX_WAIT = 5
 
 
 class NewVisitorTest(StaticLiveServerTestCase):
     def setUp(self):
         self.browser = webdriver.Chrome()
+        if DJANGO_STAGING_SERVER:
+            self.live_server_url = 'http://' + DJANGO_STAGING_SERVER
 
     # def tearDown(self):
     #     self.browser.quit()
@@ -30,7 +35,6 @@ class NewVisitorTest(StaticLiveServerTestCase):
                     raise
                 time.sleep(0.5)
 
-    @skip
     def test_can_start_a_todo_list(self):
         # Edith has heard about a cool new online to-do app.
         # She goes to check out its homepage
@@ -67,7 +71,6 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
         # Satisfied, she goes back to sleep
 
-    @skip
     def test_multiple_users_can_start_lists_at_different_urls(self):
         # Edith starts a new to-do list
         self.browser.get(self.live_server_url)

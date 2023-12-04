@@ -11,22 +11,25 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os.path
 from pathlib import Path
+from envparse import Env
+
+env = Env()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+env.read_envfile(BASE_DIR / ".env")
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-st*8ps&$d48j)p-kq0)fuv39=jc45+0kbcck)a&7w3443--o5!"
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+SECRET_KEY = env.str("DJANGO_SECRET_KEY", default="django-insecure-st*8ps&$d48j)p-kq0)fuv39=jc45+0kbcck)a&7w3443--o5!")
+DEBUG = env.bool("DJANGO_DEBUG", default=False)
+ALLOWED_HOSTS = env.str("DJANGO_ALLOWED_HOSTS", default="").split(",")
+CSRF_TRUSTED_ORIGINS = env.str("DJANGO_CSRF_TRUSTED_ORIGINS", default="").split(",")
 
 # Application definition
 
@@ -123,3 +126,5 @@ STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '../static'))
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+DJANGO_STAGING_SERVER = env.str("DJANGO_STAGING_SERVER")
